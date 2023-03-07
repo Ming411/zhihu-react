@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
+import {Provider} from 'react-redux';
+import store from './store';
 import {ConfigProvider} from 'antd-mobile';
 import zhCN from 'antd-mobile/es/locales/zh-CN';
 import 'lib-flexible';
@@ -26,7 +28,9 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ConfigProvider locale={zhCN}>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </ConfigProvider>
   </React.StrictMode>
 );
