@@ -25,6 +25,7 @@ const ForkTsCheckerWebpackPlugin =
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
+const px2rem = require('postcss-pxtorem');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -137,7 +138,11 @@ module.exports = function (webpackEnv) {
                   // Adds PostCSS Normalize as the reset css with default options,
                   // so that it honors browserslist config in package.json
                   // which in turn let's users customize the target behavior as per their needs.
-                  'postcss-normalize'
+                  'postcss-normalize',
+                  px2rem({
+                    rootValue: 75, // 设计稿*10
+                    propList: ['*'] // 对那些文件生效
+                  })
                 ]
               : [
                   'tailwindcss',
@@ -150,7 +155,11 @@ module.exports = function (webpackEnv) {
                       },
                       stage: 3
                     }
-                  ]
+                  ],
+                  px2rem({
+                    rootValue: 75, // 设计稿*10
+                    propList: ['*'] // 对那些文件生效
+                  })
                 ]
           },
           sourceMap: isEnvProduction ? shouldUseSourceMap : isEnvDevelopment
@@ -397,7 +406,11 @@ module.exports = function (webpackEnv) {
                   [
                     require.resolve('babel-preset-react-app'),
                     {
-                      runtime: hasJsxRuntime ? 'automatic' : 'classic'
+                      runtime: hasJsxRuntime ? 'automatic' : 'classic',
+                      targets: {
+                        chrome: '49',
+                        ios: '10'
+                      }
                     }
                   ]
                 ],
