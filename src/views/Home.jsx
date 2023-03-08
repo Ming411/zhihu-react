@@ -29,13 +29,11 @@ function Home() {
       } catch (_) {}
     })();
   }, []);
-  /* 监听触底再加载 */
+  /* 第一次渲染完毕:设置监听器,实现触底加载 */
   useEffect(() => {
-    // console.log(loadMore.current);
     let ob = new IntersectionObserver(async changes => {
-      // 监听元素与视口的交叉情况，无论出现还是消失都会触发
-      let {isIntersection} = changes[0]; // 筛选出检测的第一个元素的 输入情况
-      if (isIntersection) {
+      let {isIntersecting} = changes[0];
+      if (isIntersecting) {
         // 加载更多的按钮出现在视口中「也就是触底了」
         try {
           let time = newsList[newsList.length - 1]['date'];
@@ -47,12 +45,11 @@ function Home() {
     });
     let loadMoreBox = loadMore.current;
     ob.observe(loadMore.current);
+
+    // 在组件销毁释放的时候:手动销毁监听器
     return () => {
-      // 手动释放监听器
-      // 由于该钩子函数是在组件销毁完毕之后才执行，此时虚拟DOM以及相关属性已经自动销毁，所以需要手动利用闭包保存一个新变量来存储
-      ob.unobserve(loadMoreBox);
+      ob.unobserve(loadMoreBox); //loadMore.current=null
       ob = null;
-      loadMoreBox = null;
     };
   }, []);
 
