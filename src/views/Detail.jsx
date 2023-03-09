@@ -41,6 +41,8 @@ function Detail(props) {
       imgPlaceHolder.appendChild(tempImg);
     };
     tempImg.onerror = () => {
+      // 如果图片不存在就将父子预留得盒子删除
+      // 只能通过父元素删除子元素
       let parent = imgPlaceHolder.parentNode;
       parent.parentNode.removeChild(parent);
     };
@@ -60,7 +62,7 @@ function Detail(props) {
     })();
     // 销毁组件:移除创建的样式
     return () => {
-      // if (link) document.head.removeChild(link);
+      if (link) document.head.removeChild(link);
     };
   }, []);
   /* 文章点赞等信息 */

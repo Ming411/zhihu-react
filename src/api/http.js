@@ -1,26 +1,29 @@
 import _ from '../assets/utils';
 import qs from 'qs';
-import { Toast } from 'antd-mobile';
+import {Toast} from 'antd-mobile';
 
 /* 核心方法 */
 const http = function http(config) {
   // initial config & validate
   if (!_.isPlainObject(config)) config = {};
-  config = Object.assign({
-    url: '',
-    method: 'GET',
-    credentials: 'include',
-    headers: null,
-    body: null,
-    params: null,
-    responseType: 'json',
-    signal: null
-  }, config);
+  config = Object.assign(
+    {
+      url: '',
+      method: 'GET',
+      credentials: 'include',
+      headers: null,
+      body: null,
+      params: null,
+      responseType: 'json',
+      signal: null
+    },
+    config
+  );
   if (!config.url) throw new TypeError('url must be required');
   if (!_.isPlainObject(config.headers)) config.headers = {};
   if (config.params !== null && !_.isPlainObject(config.params)) config.params = null;
 
-  let { url, method, credentials, headers, body, params, responseType, signal } = config;
+  let {url, method, credentials, headers, body, params, responseType, signal} = config;
   if (params) {
     url += `${url.includes('?') ? '&' : '?'}${qs.stringify(params)}`;
   }
@@ -33,8 +36,10 @@ const http = function http(config) {
   let token = _.storage.get('tk'),
     safeList = ['/user_info', '/user_update', '/store', '/store_remove', '/store_list'];
   if (token) {
+    // [^?#] 后续只要不是 ? 或者 #
     let reg = /\/api(\/[^?#]+)/,
       [, $1] = reg.exec(url) || [];
+    // 只匹配第一个分组信息
     let isSafe = safeList.some(item => {
       return $1 === item;
     });
@@ -53,7 +58,7 @@ const http = function http(config) {
   if (/^(POST|PUT|PATCH)$/i.test(method) && body) config.body = body;
   return fetch(url, config)
     .then(response => {
-      let { status, statusText } = response;
+      let {status, statusText} = response;
       if (/^(2|3)\d{2}$/.test(status)) {
         let result;
         switch (responseType.toLowerCase()) {
@@ -87,7 +92,7 @@ const http = function http(config) {
 };
 
 /* 快捷方法 */
-["GET", "HEAD", "DELETE", "OPTIONS"].forEach(item => {
+['GET', 'HEAD', 'DELETE', 'OPTIONS'].forEach(item => {
   http[item.toLowerCase()] = function (url, config) {
     if (!_.isPlainObject(config)) config = {};
     config['url'] = url;
@@ -95,7 +100,7 @@ const http = function http(config) {
     return http(config);
   };
 });
-["POST", "PUT", "PATCH"].forEach(item => {
+['POST', 'PUT', 'PATCH'].forEach(item => {
   http[item.toLowerCase()] = function (url, body, config) {
     if (!_.isPlainObject(config)) config = {};
     config['url'] = url;
