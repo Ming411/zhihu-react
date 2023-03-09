@@ -48,7 +48,7 @@ function Login(props) {
     try {
       await formIns.validateFields();
       let {phone, code} = formIns.getFieldsValue();
-      console.log(phone, code);
+      // console.log(phone, code);
       let {code: codeHttp, token} = await api.login(phone, code);
       if (+codeHttp !== 0) {
         Toast.show({
@@ -66,9 +66,10 @@ function Login(props) {
         content: '登录/注册成功'
       });
 
-      navigate(-1); // 向后跳转
-      // let to = usp.get('to');
-      // to ? navigate(to, {replace: true}) : navigate(-1);
+      // navigate(-1); // 向后跳转
+      let to = usp.get('to');
+      // 由于客户端用户不可能直接进入login页所以不考虑
+      to ? navigate(to, {replace: true}) : navigate(-1);
     } catch (_) {}
   };
   /* 发送验证码 */

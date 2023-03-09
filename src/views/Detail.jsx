@@ -14,7 +14,7 @@ import {flushSync} from 'react-dom';
 import {connect} from 'react-redux';
 import action from '../store/action';
 function Detail(props) {
-  let {navigate, params} = props;
+  let {navigate, params, location} = props;
   const [info, setInfo] = useState(null),
     [extra, setExtra] = useState(null);
 
@@ -46,6 +46,9 @@ function Detail(props) {
       let parent = imgPlaceHolder.parentNode;
       parent.parentNode.removeChild(parent);
     };
+  };
+  const handleStore = () => {
+    // navigate(`/login?to=${location.pathname}`);
   };
 
   /* 获取文章详情 */
@@ -105,7 +108,7 @@ function Detail(props) {
             <LikeOutline />
           </Badge>
           {/* <span className={isStore ? 'stored' : ''} onClick={handleStore}> */}
-          <span className="stored">
+          <span className="stored" onClick={handleStore}>
             <StarOutline />
           </span>
           <span>
